@@ -13,11 +13,13 @@ const list = () => {
     return [...data];
 }
 
-// const find = (name) => {
-//     return data.find(val => val[title] === name);
-// }
+const findBook = (ID) => {
+    //const intID = Integer.parseInt(ID);
+    const book = data.find(val => val.id === ID);
+    return {...book};
+ }
 
 module.exports = {
     list : list,
-    //find : find
+    findBook : findBook
 }
