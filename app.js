@@ -20,7 +20,7 @@ const header = ()=>{
     </head>
 `
 }
-const books = data.list();
+const books = data.data;
 
 app.get('/',(req,res,next)=>{
 
@@ -34,7 +34,9 @@ app.get('/',(req,res,next)=>{
                     <p>Here are a few sci-fi favorites to get you through a pandemic</p>
                 </div>
                 <div class = "booklist">
-                ${books.map(book =>{return `
+                ${books.map(book =>{
+                    console.log(book);
+                    return `
                     <div class="book">
                         <a href = "/books/${book.id}" class = "booklink">
                             <h4 class = "booktitle">${book.title}</h4>
@@ -43,7 +45,7 @@ app.get('/',(req,res,next)=>{
                     </div>
                 
                 `
-                }).join('')}
+                })}
 
             </div>
             <script>
@@ -57,7 +59,7 @@ app.get('/',(req,res,next)=>{
 
 app.get('/books/:id',(req,res,next)=>{
     const book = data.findBook(Number(req.params.id));
-    
+    //if(book){res.send}else{send error page}
     res.send(`
         <!DOCTYPE html>
         <html>
@@ -78,7 +80,7 @@ app.get('/books/:id',(req,res,next)=>{
 
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=>{
     console.log(`listening to port: ${PORT}`);
