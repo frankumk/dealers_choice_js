@@ -96,8 +96,8 @@ app.get('/books/:id',(req,res,next)=>{
 
 
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, ()=>{
-    console.log(`listening to port: ${PORT}`);
-})
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+app.listen(port);
