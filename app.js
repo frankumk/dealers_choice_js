@@ -22,6 +22,14 @@ const header = ()=>{
 }
 const books = data.data;
 
+const nextBookID = (ID)=> {
+    if(ID===6){
+        return 1;
+    }else{
+        return ID++;
+    }
+}
+
 app.get('/',(req,res,next)=>{
 
     const html = `
@@ -35,22 +43,17 @@ app.get('/',(req,res,next)=>{
                 </div>
                 <div class = "booklist">
                 ${books.map(book =>{
-                    console.log(book);
                     return `
                     <div class="book">
                         <a href = "/books/${book.id}" class = "booklink">
                             <h4 class = "booktitle">${book.title}</h4>
-                            <img src = "${book.img}" alt = "${book.title}/>
+                            <img src = "${book.img}" alt = "${book.title}"/>
                         </a>
                     </div>
-                
                 `
-                })}
+                }).join('')}
 
             </div>
-            <script>
-                console.log(books);
-            </script>
         </body>
     </html>
     `;
@@ -59,29 +62,42 @@ app.get('/',(req,res,next)=>{
 
 app.get('/books/:id',(req,res,next)=>{
     const book = data.findBook(Number(req.params.id));
-    //if(book){res.send}else{send error page}
-    res.send(`
-        <!DOCTYPE html>
-        <html>
-            ${header()}
-            <body>
-                <nav>
-                    <a href='/'>Home</a>
-                    // <a href='/book'>Next</a>
-                </nav>
-                <h1>${book.title}</h1>
-                <h2>${book.author}</h2>
-                <p class='reviews'>Review: ${book.review}</p>
-                <p class='summary'>${book.summary}</p>
-            </body>
-        </html>
-    `);
+    let nextBookId=0;
+    //only 6 books, starts over at 1
+    if(book.id===6){
+        nextBookId = 1;
+    }else{
+        nextBookId = (book.id) +1;
+    }
+    console.log(nextBookId);
+    if(book){
+        res.send(`
+            <!DOCTYPE html>
+            <html>
+                ${header()}
+                <body>
+                    <nav>
+                        <a href='/'>Home</a>
+                    //   <a href="/books/${nextBookId}">Next</a>
+                    </nav>
+                    <h1>${book.title}</h1>
+                    <h2>${book.author}</h2>
+                    <p class='reviews'>Review: ${book.review}</p>
+                    <p class='summary'>${book.summary}</p>
+                </body>
+            </html>
+        `);
+    }else{
+        res.statusCode = 404;
+        res.write('<h1>Page Not Found<a href="\">Try Again</a></h1>');
+        res.end();
+    }
 });
 
 
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, ()=>{
-    console.log(`listening to port: ${PORT}`);
-})
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+app.listen(port);
